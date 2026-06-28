@@ -193,24 +193,13 @@ st.markdown("---")
 # Project Overview
 # ------------------------------------------------------------
 
-with st.container():
+st.info(
+"""
+This dashboard predicts whether an employee is likely to leave the company using a Machine Learning model trained on the IBM HR Analytics dataset.
 
-    st.markdown(
-        """
-<div class="card">
-
-### Project Overview
-
-Employee attrition is one of the major challenges faced by organizations.
-
-This application predicts whether an employee is likely to leave the company by analyzing demographic, professional, financial, and workplace-related factors.
-
-The prediction is generated using a Machine Learning model trained on the IBM HR Analytics Employee Attrition dataset.
-
-</div>
-""",
-        unsafe_allow_html=True
-    )
+Fill in the employee information below and click **Predict Attrition** to view the prediction, confidence score, and HR recommendations.
+"""
+)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -696,226 +685,226 @@ if predict_btn:
         hide_index=True
     )
 
-# ==========================================================
-# Prediction Gauge
-# ==========================================================
-
-st.subheader("Prediction Confidence")
-
-fig = go.Figure(go.Indicator(
-
-    mode="gauge+number",
-
-    value=probability,
-
-    title={"text":"Attrition Probability (%)"},
-
-    gauge={
-
-        "axis":{"range":[0,100]},
-
-        "bar":{"color":"darkblue"},
-
-        "steps":[
-
-            {"range":[0,40],"color":"#90EE90"},
-
-            {"range":[40,70],"color":"#FFD966"},
-
-            {"range":[70,100],"color":"#FF6B6B"}
-
-        ]
-
-    }
-
-))
-
-st.plotly_chart(
-    fig,
-    use_container_width=True
-)
-
-st.subheader("Risk Level")
-
-st.progress(probability/100)
-
-if probability >= 70:
-
-    st.error("High Attrition Risk")
-
-elif probability >= 40:
-
-    st.warning("Moderate Attrition Risk")
-
-else:
-
-    st.success("Low Attrition Risk")
-
-st.subheader("Employee Profile")
-
-col1,col2,col3 = st.columns(3)
-
-with col1:
-
-    st.metric("Age",age)
-
-    st.metric("Department",department)
-
-    st.metric("Job Role",job_role)
-
-with col2:
-
-    st.metric("Income",f"₹ {monthly_income}")
-
-    st.metric("Years at Company",years_at_company)
-
-    st.metric("Business Travel",business_travel)
-
-with col3:
-
-    st.metric("Job Satisfaction",job_satisfaction)
-
-    st.metric("Work Life Balance",work_life_balance)
-
-    st.metric("OverTime",overtime)
-
-st.subheader("Most Important Features")
-
-if hasattr(model,"feature_importances_"):
-
-    importance = pd.DataFrame({
-
-        "Feature":feature_columns,
-
-        "Importance":model.feature_importances_
-
-    })
-
-    importance = importance.sort_values(
-
-        by="Importance",
-
-        ascending=False
-
-    ).head(10)
-
-    st.bar_chart(
-
-        importance.set_index("Feature")
-
+    # ==========================================================
+    # Prediction Gauge
+    # ==========================================================
+    
+    st.subheader("Prediction Confidence")
+    
+    fig = go.Figure(go.Indicator(
+    
+        mode="gauge+number",
+    
+        value=probability,
+    
+        title={"text":"Attrition Probability (%)"},
+    
+        gauge={
+    
+            "axis":{"range":[0,100]},
+    
+            "bar":{"color":"darkblue"},
+    
+            "steps":[
+    
+                {"range":[0,40],"color":"#90EE90"},
+    
+                {"range":[40,70],"color":"#FFD966"},
+    
+                {"range":[70,100],"color":"#FF6B6B"}
+    
+            ]
+    
+        }
+    
+    ))
+    
+    st.plotly_chart(
+        fig,
+        use_container_width=True
     )
-
-
-st.subheader("Download Prediction Report")
-
-report = pd.DataFrame({
-
-    "Field":[
-
-        "Prediction",
-
-        "Probability",
-
-        "Risk Level",
-
-        "Department",
-
-        "Job Role",
-
-        "Monthly Income"
-
-    ],
-
-    "Value":[
-
-        "Leave" if prediction else "Stay",
-
-        f"{probability:.2f}%",
-
-        risk,
-
-        department,
-
-        job_role,
-
-        monthly_income
-
-    ]
-
-})
-
-csv = report.to_csv(index=False).encode("utf-8")
-
-st.download_button(
-
-    label="Download CSV Report",
-
-    data=csv,
-
-    file_name="employee_attrition_prediction.csv",
-
-    mime="text/csv"
-
-)
-
-st.subheader("Input Summary")
-
-summary = pd.DataFrame({
-
-    "Feature":[
-
-        "Age",
-
-        "Department",
-
-        "Job Role",
-
-        "Income",
-
-        "Years At Company",
-
-        "OverTime",
-
-        "Job Satisfaction",
-
-        "Work Life Balance"
-
-    ],
-
-    "Value":[
-
-        age,
-
-        department,
-
-        job_role,
-
-        monthly_income,
-
-        years_at_company,
-
-        overtime,
-
-        job_satisfaction,
-
-        work_life_balance
-
-    ]
-
-})
-
-st.dataframe(
-
-    summary,
-
-    use_container_width=True,
-
-    hide_index=True
-)
-
-st.markdown("---")
-
-st.caption(
-    "Employee Attrition Prediction Dashboard • Built with Streamlit & Scikit-learn"
-)
-
+    
+    st.subheader("Risk Level")
+    
+    st.progress(probability/100)
+    
+    if probability >= 70:
+    
+        st.error("High Attrition Risk")
+    
+    elif probability >= 40:
+    
+        st.warning("Moderate Attrition Risk")
+    
+    else:
+    
+        st.success("Low Attrition Risk")
+    
+    st.subheader("Employee Profile")
+    
+    col1,col2,col3 = st.columns(3)
+    
+    with col1:
+    
+        st.metric("Age",age)
+    
+        st.metric("Department",department)
+    
+        st.metric("Job Role",job_role)
+    
+    with col2:
+    
+        st.metric("Income",f"₹ {monthly_income}")
+    
+        st.metric("Years at Company",years_at_company)
+    
+        st.metric("Business Travel",business_travel)
+    
+    with col3:
+    
+        st.metric("Job Satisfaction",job_satisfaction)
+    
+        st.metric("Work Life Balance",work_life_balance)
+    
+        st.metric("OverTime",overtime)
+    
+    st.subheader("Most Important Features")
+    
+    if hasattr(model,"feature_importances_"):
+    
+        importance = pd.DataFrame({
+    
+            "Feature":feature_columns,
+    
+            "Importance":model.feature_importances_
+    
+        })
+    
+        importance = importance.sort_values(
+    
+            by="Importance",
+    
+            ascending=False
+    
+        ).head(10)
+    
+        st.bar_chart(
+    
+            importance.set_index("Feature")
+    
+        )
+    
+    
+    st.subheader("Download Prediction Report")
+    
+    report = pd.DataFrame({
+    
+        "Field":[
+    
+            "Prediction",
+    
+            "Probability",
+    
+            "Risk Level",
+    
+            "Department",
+    
+            "Job Role",
+    
+            "Monthly Income"
+    
+        ],
+    
+        "Value":[
+    
+            "Leave" if prediction else "Stay",
+    
+            f"{probability:.2f}%",
+    
+            risk,
+    
+            department,
+    
+            job_role,
+    
+            monthly_income
+    
+        ]
+    
+    })
+    
+    csv = report.to_csv(index=False).encode("utf-8")
+    
+    st.download_button(
+    
+        label="Download CSV Report",
+    
+        data=csv,
+    
+        file_name="employee_attrition_prediction.csv",
+    
+        mime="text/csv"
+    
+    )
+    
+    st.subheader("Input Summary")
+    
+    summary = pd.DataFrame({
+    
+        "Feature":[
+    
+            "Age",
+    
+            "Department",
+    
+            "Job Role",
+    
+            "Income",
+    
+            "Years At Company",
+    
+            "OverTime",
+    
+            "Job Satisfaction",
+    
+            "Work Life Balance"
+    
+        ],
+    
+        "Value":[
+    
+            age,
+    
+            department,
+    
+            job_role,
+    
+            monthly_income,
+    
+            years_at_company,
+    
+            overtime,
+    
+            job_satisfaction,
+    
+            work_life_balance
+    
+        ]
+    
+    })
+    
+    st.dataframe(
+    
+        summary,
+    
+        use_container_width=True,
+    
+        hide_index=True
+    )
+    
+    st.markdown("---")
+    
+    st.caption(
+        "Employee Attrition Prediction Dashboard • Built with Streamlit & Scikit-learn"
+    )
+    
